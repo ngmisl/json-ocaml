@@ -1,6 +1,7 @@
 open Lwt
 open Cohttp
 open Cohttp_lwt_unix
+open Format
 
 let fetch_json url =
   Client.get (Uri.of_string url) >>= fun (resp, body) ->
@@ -16,10 +17,12 @@ let parse_json json =
   let json = Yojson.Basic.from_string json in
   (* Here you can access the fields of the JSON object *)
   (* For example, if the JSON object has a field "name", you can get it like this: *)
+  let id = json |> member "id" |> to_string in
   let name = json |> member "name" |> to_string in
   let description = json |> member "description" |> to_string in
-  print_endline name;
-  print_endline description
+  let image = json |> member "image" |> to_string in
+  printf "\n Id: %s\n Name: %s\n Desription: %s\n Image: %s\n" id name
+    description image
 
 let () =
   let json =
